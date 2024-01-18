@@ -8,5 +8,5 @@ public class Movie
     List<Genre> Genres { get; set; } = new();
     public List<Movie> Related { get; set; } = new();
     public List<Actor> Actors { get; set; } = new();
-    
+    public List<Director> Directors { get; set; } = new();
 }
