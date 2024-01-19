@@ -1,0 +1,13 @@
+### Git Ignore File for VSCode ###
+.vscode/*
+
+# Local History for VSCode
+.history/
+
+# Any files in the bin and obj directories including the directories
+**/bin/*
+**/obj/*
+
+### VSCode Patch ###
+.history
+.ionide
