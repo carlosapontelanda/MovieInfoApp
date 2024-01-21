@@ -7,6 +7,5 @@ public class Actor
     public DateTime DateOfBirth { get; set; }
     public string Info { get; set; }
 
-    public int? MovieId { get; set; }
-    public Movie? Movie{ get; set; }
+    public ICollection<Movie> Movies { get; set; }
 }

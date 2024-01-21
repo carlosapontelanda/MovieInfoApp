@@ -3,12 +3,9 @@
 public class Director
 {
     public int Id { get; set; }
-    public string namespace { get; set; }
+    public string Name { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string Info { get; set; }
     
-    public int? MovieId { get; set; }
-    public Movie? Movie { get; set; }
-
-
+    public ICollection<Movie> Movies { get; set; }
 }
