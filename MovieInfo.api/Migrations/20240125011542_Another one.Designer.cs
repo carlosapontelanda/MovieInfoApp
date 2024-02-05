@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieInfo.api;
 
@@ -10,42 +11,14 @@ using MovieInfo.api;
 namespace MovieInfo.api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240125011542_Another one")]
+    partial class Anotherone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
-
-            modelBuilder.Entity("ActorMovie", b =>
-                {
-                    b.Property<int>("ActorsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ActorsId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("MovieActor", (string)null);
-                });
-
-            modelBuilder.Entity("DirectorMovie", b =>
-                {
-                    b.Property<int>("DirectorsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("MoviesId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("DirectorsId", "MoviesId");
-
-                    b.HasIndex("MoviesId");
-
-                    b.ToTable("MovieDirector", (string)null);
-                });
 
             modelBuilder.Entity("MovieInfo.api.Actor", b =>
                 {
@@ -53,7 +26,7 @@ namespace MovieInfo.api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly>("DateOfBirth")
+                    b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Info")
@@ -84,7 +57,7 @@ namespace MovieInfo.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Director");
+                    b.ToTable("Directors");
                 });
 
             modelBuilder.Entity("MovieInfo.api.Movie", b =>
@@ -92,12 +65,6 @@ namespace MovieInfo.api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("Genre")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("ReleaseDate")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Synopsys")
                         .HasColumnType("TEXT");
@@ -110,34 +77,48 @@ namespace MovieInfo.api.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("ActorMovie", b =>
+            modelBuilder.Entity("MovieInfo.api.MovieActor", b =>
                 {
-                    b.HasOne("MovieInfo.api.Actor", null)
-                        .WithMany()
-                        .HasForeignKey("ActorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("MovieId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasOne("MovieInfo.api.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("ActorId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MovieId", "ActorId");
+
+                    b.HasIndex("ActorId");
+
+                    b.ToTable("MovieActors");
                 });
 
-            modelBuilder.Entity("DirectorMovie", b =>
+            modelBuilder.Entity("MovieInfo.api.MovieActor", b =>
                 {
-                    b.HasOne("MovieInfo.api.Director", null)
-                        .WithMany()
-                        .HasForeignKey("DirectorsId")
+                    b.HasOne("MovieInfo.api.Actor", "Actor")
+                        .WithMany("MovieActors")
+                        .HasForeignKey("ActorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieInfo.api.Movie", null)
-                        .WithMany()
-                        .HasForeignKey("MoviesId")
+                    b.HasOne("MovieInfo.api.Movie", "Movie")
+                        .WithMany("MovieActors")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Actor");
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("MovieInfo.api.Actor", b =>
+                {
+                    b.Navigation("MovieActors");
+                });
+
+            modelBuilder.Entity("MovieInfo.api.Movie", b =>
+                {
+                    b.Navigation("MovieActors");
                 });
 #pragma warning restore 612, 618
         }
