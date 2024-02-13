@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using MovieInfo.api;
+using MovieInfo.api.Services;    
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +14,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDBContext>(op =>
     op.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
 builder.Services.AddControllers()
     .AddJsonOptions(op => 
     {
         op.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
 

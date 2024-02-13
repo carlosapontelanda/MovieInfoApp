@@ -1,5 +1,6 @@
-### Git Ignore File for VSCode ###
+### Git Ignore File for VSCode and Visual Studio###
 .vscode/*
+.vs/*
 
 # Local History for VSCode
 .history/

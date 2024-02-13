@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using MovieInfo.api.Services;
 
 namespace MovieInfo.api;
 
@@ -7,38 +7,53 @@ namespace MovieInfo.api;
 [ApiController]
 public class MovieController : ControllerBase
 {
-    private readonly ApplicationDBContext _context;
+    private readonly IMovieService _movieService;
 
-    public MovieController(ApplicationDBContext context)
+    public MovieController(IMovieService movieService)
     {
-        _context = context;
+        _movieService = movieService;
+    }
+
+    //[HttpGet]
+    //public IActionResult GetAllMovies()
+    //{
+    //var movies = _context.Movies
+    //        .Include(a => a.Actors)
+    //        .Include(d => d.Directors)
+    //        .Include(m => m.MovieActors)
+    //        .ThenInclude(ma => ma.Actor.Name, )
+    //        .ToList();
+
+    //    if (movies.Any())
+    //    {
+    //        return Ok(movies);
+    //    }
+    //    return NotFound();   
+    //}
+
+    [HttpGet]
+    [Route("{title}")]
+    public IActionResult GetMovieByTitle(string title)
+    {
+        var movies = _movieService.GetMoviesByTitle(title);
+
+        if (movies is null)
+        {
+            return NotFound();
+        }
+        return Ok(movies.Select(m => m.ToMovieDto()));
     }
 
     [HttpGet]
-    public IActionResult GetAllMovies()
+    [Route("{id:int}")]
+    public IActionResult GetMovieById(int id)
     {
-    var movies = _context.Movies
-            .Include(a => a.Actors)
-            .Include(d => d.Directors)
-            //.Include(m => m.MovieActors)
-            //.ThenInclude(ma => ma.Actor.Name, )
-            .ToList();
-            
-        if (movies.Any())
+        var movie = _movieService.GetMovieById(id);
+        if (movie is null)
         {
-            return Ok(movies);
-        }
-        return NotFound();   
-    }
-
-    [HttpGet("{title}")]
-    public IActionResult GetMovieByTitle([FromRoute] string title)
-    {
-        var movie = _context.Movies.Where(m => m.Title == title);
-
-        if (movie == null)
             return NotFound();
-
-        return Ok(movie);
+        }
+        return Ok(movie.ToMovieDto());
     }
+    
 }
