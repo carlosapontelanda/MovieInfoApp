@@ -1,17 +1,27 @@
 ﻿namespace MovieInfo.api;
+using MovieInfo.api.DTOs;
 
 public static class MovieMapper
 {
     public static MovieDto ToMovieDto (this Movie movie)
     {
-        return new MovieDto
+        var actorsDto = new List<ActorDto>();
+
+        foreach (var actor in movie.Actors)
         {
-            Id = movie.Id,
-            Title = movie.Title,
-            Synopsys = movie.Synopsys,
-            ReleaseDate = movie.ReleaseDate,
-            Genre = movie.Genre.ToString()
-        };
+            var actorDto = new ActorDto(actor.Id, actor.Name, actor.DateOfBirth, actor.Info);
+            actorsDto.Add(actorDto);
+        }
+
+        var directorsDto = new List<DirectorDto>();
+
+        foreach (var director in movie.Directors)
+        {
+            var directorDto = new DirectorDto(director.Id, director.Name, director.DateOfBirth, director.Info);
+            directorsDto.Add(directorDto);
+        }
+
+        return new MovieDto(movie.Id, movie.Title, movie.Synopsys, movie.ReleaseDate.Year, movie.Genre.ToString(), actorsDto, directorsDto);
     }
 
     public static Movie ToMovieFromCreateMovieDto(this CreateMovieRequestDto createMovieRequestDto)

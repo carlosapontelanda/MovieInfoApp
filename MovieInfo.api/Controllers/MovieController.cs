@@ -14,25 +14,18 @@ public class MovieController : ControllerBase
         _movieService = movieService;
     }
 
-    //[HttpGet]
-    //public IActionResult GetAllMovies()
-    //{
-    //var movies = _context.Movies
-    //        .Include(a => a.Actors)
-    //        .Include(d => d.Directors)
-    //        .Include(m => m.MovieActors)
-    //        .ThenInclude(ma => ma.Actor.Name, )
-    //        .ToList();
+    [HttpGet]
+    [Route("GetAllMjovies")]
+    public IActionResult GetAllMovies()
+    {
+        var movies = _movieService.GetAllMovies();
 
-    //    if (movies.Any())
-    //    {
-    //        return Ok(movies);
-    //    }
-    //    return NotFound();   
-    //}
+        return (movies is null) ? NotFound()
+            : Ok(movies.Select(m => m.ToMovieDto()));
+    }
 
     [HttpGet]
-    [Route("{title}")]
+    [Route("GetMovieByTitle/{title}")]
     public IActionResult GetMovieByTitle(string title)
     {
         var movies = _movieService.GetMoviesByTitle(title);
@@ -45,7 +38,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id:int}")]
+    [Route("GetMovieById/{id:int}")]
     public IActionResult GetMovieById(int id)
     {
         var movie = _movieService.GetMovieById(id);

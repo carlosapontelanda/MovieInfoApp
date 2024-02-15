@@ -24,6 +24,5 @@ public class ApplicationDBContext : DbContext
             .HasMany(d => d.Directors)
             .WithMany(m=> m.Movies)
             .UsingEntity(md => md.ToTable("MovieDirector"));
-    }
-    
+    }    
 }
