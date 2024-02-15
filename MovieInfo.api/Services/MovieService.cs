@@ -35,7 +35,8 @@ public class MovieService : IMovieService
             .Include(a => a.Actors)
             .Include(d => d.Directors)
             //.Where(m => m.Title.Contains(title))
-            .Where(m => string.Equals(m.Title, title, StringComparison.InvariantCultureIgnoreCase))
+            //.Where(m => string.Equals(m.Title, title, StringComparison.InvariantCultureIgnoreCase))
+            .Where(m => EF.Functions.Like(m.Title, $"%{title}%"))
             .ToList();
 
         return (movies.Count() == 0) ? null : movies;

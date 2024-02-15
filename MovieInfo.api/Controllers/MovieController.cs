@@ -15,7 +15,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet]
-    [Route("GetAllMjovies")]
+    [Route("GetAllMovies")]
     public IActionResult GetAllMovies()
     {
         var movies = _movieService.GetAllMovies();

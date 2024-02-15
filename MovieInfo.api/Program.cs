@@ -12,6 +12,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(op =>
     op.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
     op => op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
+builder.Services.AddControllers();
+
 builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
