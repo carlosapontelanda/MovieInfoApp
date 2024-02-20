@@ -1,17 +1,21 @@
 ﻿using  Microsoft.EntityFrameworkCore;
 
 namespace MovieInfo.api.Services;
-public class MovieService : IMovieService
+public class MovieService(ApplicationDBContext context) : IMovieService
 {
-    private readonly ApplicationDBContext _context;
-    public MovieService(ApplicationDBContext context)
-    {
-        _context = context;
-    }
+    private readonly ApplicationDBContext context = context;
 
-    public IEnumerable<Movie> GetAllMovies()
+    public IEnumerable<Movie> GetMovies(string? title)
+
     {
-        var movies = _context.Movies
+        var moviesQuery = context.Movies.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            moviesQuery = moviesQuery.Where(m => EF.Functions.Like(m.Title, $"%{title}%"));
+        }
+
+        var movies = moviesQuery
             .Include(a => a.Actors)
             .Include(d => d.Directors)
             .ToList();
@@ -21,24 +25,11 @@ public class MovieService : IMovieService
 
     public Movie GetMovieById(int id)
     {
-        var movie = _context.Movies
+        var movie = context.Movies
             .Include(a => a.Actors)
             .Include(d => d.Directors)
             .FirstOrDefault(x => x.Id == id);
 
         return movie ?? null;
-    }
-
-    public IEnumerable<Movie> GetMoviesByTitle(string title)
-    {
-        var movies = _context.Movies
-            .Include(a => a.Actors)
-            .Include(d => d.Directors)
-            //.Where(m => m.Title.Contains(title))
-            //.Where(m => string.Equals(m.Title, title, StringComparison.InvariantCultureIgnoreCase))
-            .Where(m => EF.Functions.Like(m.Title, $"%{title}%"))
-            .ToList();
-
-        return (movies.Count() == 0) ? null : movies;
     }
 }

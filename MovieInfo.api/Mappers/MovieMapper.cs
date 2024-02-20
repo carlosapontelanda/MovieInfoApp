@@ -20,18 +20,18 @@ public static class MovieMapper
             var directorDto = new DirectorDto(director.Id, director.Name, director.DateOfBirth, director.Info);
             directorsDto.Add(directorDto);
         }
-
         return new MovieDto(movie.Id, movie.Title, movie.Synopsys, movie.ReleaseDate.Year, movie.Genre.ToString(), actorsDto, directorsDto);
     }
 
-    public static Movie ToMovieFromCreateMovieDto(this CreateMovieRequestDto createMovieRequestDto)
+    public static Movie ToMovieFromMovieDto(this CreateMovieDto createMovieDto)
     {
+
         return new Movie
         {
-            Title = createMovieRequestDto.Title,
-            Synopsys = createMovieRequestDto.Synopsys,
-            ReleaseDate = createMovieRequestDto.ReleaseDate,
-            Genre = createMovieRequestDto.Genre
+            Title = createMovieDto.Title,
+            Synopsys = createMovieDto.Synopsys,
+            ReleaseDate = createMovieDto.ReleaseYear,
+            Genre = (Genre)Enum.Parse(typeof(Genre), createMovieDto.Genre)
         };
     }
 }

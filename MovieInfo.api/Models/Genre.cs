@@ -2,10 +2,14 @@
 
 public enum Genre
 {
-    Adventure = 1,
-    Animated = 2,
-    Comedy = 3,
-    Fiction = 4,
-    Horror = 5,
-    Thriller = 6
+    None = 0,
+    Action = 1,
+    Adventure = 2,
+    Animated = 3,
+    Comedy = 4,
+    Drama = 5,
+    Fiction = 6,
+    Horror = 7,
+    Thriller = 8,
+
 }
