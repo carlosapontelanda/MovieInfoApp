@@ -25,6 +25,12 @@ public static class MovieMapper
 
     public static Movie ToMovieFromMovieDto(this CreateMovieDto createMovieDto)
     {
+        var actors = new List<Actor>();
+
+        //foreach (var actorDto in createMovieDto.Actors )
+        //{ 
+        //    var actor = new Actor() { Id = 2, }
+        //}
 
         return new Movie
         {
