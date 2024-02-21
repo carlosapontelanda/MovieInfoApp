@@ -32,4 +32,13 @@ public class MovieService(ApplicationDBContext context) : IMovieService
 
         return movie ?? null;
     }
+
+    public Movie CreateMovie(CreateMovieDto createMovieDto)
+    {
+        var movie = createMovieDto.ToMovieFromMovieDto();
+        context.Movies.Add(movie);
+        context.SaveChanges();
+
+        return CreaatedAtFunction(nameof(GetMovieById), new { Id = movie.Id }, movie.ToMovieDto());
+    }
 }

@@ -27,17 +27,26 @@ public static class MovieMapper
     {
         var actors = new List<Actor>();
 
-        //foreach (var actorDto in createMovieDto.Actors )
-        //{ 
-        //    var actor = new Actor() { Id = 2, }
-        //}
+        foreach (var actorDto in createMovieDto.Actors)
+        { 
+            var actor = new Actor() { Name = actorDto.Name, DateOfBirth = actorDto.DateOfBirth, Info = actorDto.Info };
+            actors.Add(actor);
+        }
 
+        var directors = new List<Director>();
+
+        foreach (var directorDto in createMovieDto.Directors)
+        {
+            var director = new Director() { Name = directorDto.Name, DateOfBirth = directorDto.DateOfBirth, Info = directorDto.Info };
+        }
         return new Movie
         {
             Title = createMovieDto.Title,
             Synopsys = createMovieDto.Synopsys,
             ReleaseDate = createMovieDto.ReleaseYear,
-            Genre = (Genre)Enum.Parse(typeof(Genre), createMovieDto.Genre)
+            Genre = (Genre)Enum.Parse(typeof(Genre), createMovieDto.Genre),
+            Actors = actors,
+            Directors = directors
         };
     }
 }
