@@ -1,11 +1,10 @@
-﻿namespace MovieInfo.api.Mappers;
+﻿using MovieInfo.api.DTOs;
 
-public class DirectorMapper
+namespace MovieInfo.api;
+public static class DirectorMapper
 {
     public static DirectorDto ToDirectorDto(this Director director)
     {
-        return new DirectorDto() { director.Id, director.Name, director.DateOfBirth, director.Info };
-    }
-    
+        return new DirectorDto(director.Id, director.Name, director.DateOfBirth, director.Info);
+    }   
 }
-

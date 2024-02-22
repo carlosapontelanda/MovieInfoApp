@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using MovieInfo.api.Data;
 
 namespace MovieInfo.api.Controllers
 {
@@ -10,7 +10,7 @@ namespace MovieInfo.api.Controllers
         private readonly IDirectorRepository directorRepo = directorRepo;
 
         [HttpGet]
-        public async Task<IActionResult> GetDirectors(string? name)
+        public async Task<IActionResult> GetDirectors(string name)
         {
             var directors = await directorRepo.GetAllAsync(name);
 

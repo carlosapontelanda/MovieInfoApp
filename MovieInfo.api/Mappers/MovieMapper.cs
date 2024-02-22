@@ -1,5 +1,6 @@
-﻿namespace MovieInfo.api;
-using MovieInfo.api.DTOs;
+﻿using MovieInfo.api.DTOs;
+
+namespace MovieInfo.api;
 
 public static class MovieMapper
 {

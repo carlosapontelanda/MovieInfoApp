@@ -2,6 +2,6 @@
 public interface IActorRepository
 {
     Task<List<Actor>> GetAllAsync(string name);
-    Task<Actor> GetById(int id);
+    Task<Actor> GetByIdAsync(int id);
 }
 

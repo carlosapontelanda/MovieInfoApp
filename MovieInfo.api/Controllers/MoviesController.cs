@@ -12,7 +12,7 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
     private readonly IMovieRepository movieRepo = movieRepo;
 
     [HttpGet]
-    public async Task<IActionResult> GetMovies(string? title)
+    public async Task<IActionResult> GetMovies(string title)
     {
         var movies = await movieRepo.GetAllAsync(title);
 
