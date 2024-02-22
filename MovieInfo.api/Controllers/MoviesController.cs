@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieInfo.api.Data;
 
-namespace MovieInfo.api;
+namespace MovieInfo.api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
