@@ -1,8 +1,8 @@
-﻿namespace MovieInfo.api.Data
+﻿namespace MovieInfo.api.Data;
 
 public interface IDirectorRepository
 {
-    Task<List<Director>> GetAllAsync(string? name);
-    Task<Director> GetById(int Id);
+    Task<List<Director>> GetAllAsync(string name);
+    Task<Director> GetByIdAsync(int id);
 }
 

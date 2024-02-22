@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 namespace MovieInfo.api.Data;
 public class MovieRepository(ApplicationDBContext context) : IMovieRepository
 {
@@ -18,7 +19,7 @@ public class MovieRepository(ApplicationDBContext context) : IMovieRepository
             .Include(d => d.Directors)
             .ToListAsync();
 
-        return (movies is null) ? null : movies;
+        return (movies.Count() == 0) ? null : movies;
     }
 
     public async Task<Movie> GetByIdAsync(int id)

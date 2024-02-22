@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieInfo.api.Migrations
 {
     /// <inheritdoc />
-    public partial class Anotherone : Migration
+    public partial class Newfirstmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace MovieInfo.api.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Info = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -33,7 +33,7 @@ namespace MovieInfo.api.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Info = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -48,7 +48,9 @@ namespace MovieInfo.api.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
-                    Synopsys = table.Column<string>(type: "TEXT", nullable: true)
+                    Synopsys = table.Column<string>(type: "TEXT", nullable: true),
+                    ReleaseDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    Genre = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,43 +61,75 @@ namespace MovieInfo.api.Migrations
                 name: "MovieActors",
                 columns: table => new
                 {
-                    MovieId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ActorId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ActorsId = table.Column<int>(type: "INTEGER", nullable: false),
+                    MoviesId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieActors", x => new { x.MovieId, x.ActorId });
+                    table.PrimaryKey("PK_MovieActors", x => new { x.ActorsId, x.MoviesId });
                     table.ForeignKey(
-                        name: "FK_MovieActors_Actors_ActorId",
-                        column: x => x.ActorId,
+                        name: "FK_MovieActors_Actors_ActorsId",
+                        column: x => x.ActorsId,
                         principalTable: "Actors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MovieActors_Movies_MovieId",
-                        column: x => x.MovieId,
+                        name: "FK_MovieActors_Movies_MoviesId",
+                        column: x => x.MoviesId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovieDirectors",
+                columns: table => new
+                {
+                    DirectorsId = table.Column<int>(type: "INTEGER", nullable: false),
+                    MoviesId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieDirectors", x => new { x.DirectorsId, x.MoviesId });
+                    table.ForeignKey(
+                        name: "FK_MovieDirectors_Directors_DirectorsId",
+                        column: x => x.DirectorsId,
+                        principalTable: "Directors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovieDirectors_Movies_MoviesId",
+                        column: x => x.MoviesId,
                         principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovieActors_ActorId",
+                name: "IX_MovieActors_MoviesId",
                 table: "MovieActors",
-                column: "ActorId");
+                column: "MoviesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieDirectors_MoviesId",
+                table: "MovieDirectors",
+                column: "MoviesId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Directors");
-
-            migrationBuilder.DropTable(
                 name: "MovieActors");
 
             migrationBuilder.DropTable(
+                name: "MovieDirectors");
+
+            migrationBuilder.DropTable(
                 name: "Actors");
+
+            migrationBuilder.DropTable(
+                name: "Directors");
 
             migrationBuilder.DropTable(
                 name: "Movies");

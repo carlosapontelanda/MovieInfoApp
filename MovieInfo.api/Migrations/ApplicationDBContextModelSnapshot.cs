@@ -29,7 +29,7 @@ namespace MovieInfo.api.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("MovieActor", (string)null);
+                    b.ToTable("MovieActors", (string)null);
                 });
 
             modelBuilder.Entity("DirectorMovie", b =>
@@ -44,7 +44,7 @@ namespace MovieInfo.api.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("MovieDirector", (string)null);
+                    b.ToTable("MovieDirectors", (string)null);
                 });
 
             modelBuilder.Entity("MovieInfo.api.Actor", b =>
@@ -73,7 +73,7 @@ namespace MovieInfo.api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Info")
@@ -84,7 +84,7 @@ namespace MovieInfo.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Director");
+                    b.ToTable("Directors");
                 });
 
             modelBuilder.Entity("MovieInfo.api.Movie", b =>

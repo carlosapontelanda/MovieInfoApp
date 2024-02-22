@@ -19,11 +19,11 @@ public class ApplicationDBContext : DbContext
         modelBuilder.Entity<Movie>()
             .HasMany(a => a.Actors)
             .WithMany(m => m.Movies)
-            .UsingEntity(am => am.ToTable("MovieActor"));
+            .UsingEntity(am => am.ToTable("MovieActors"));
 
         modelBuilder.Entity<Movie>()
             .HasMany(d => d.Directors)
             .WithMany(m=> m.Movies)
-            .UsingEntity(md => md.ToTable("MovieDirector"));
+            .UsingEntity(md => md.ToTable("MovieDirectors"));
     }    
 }
