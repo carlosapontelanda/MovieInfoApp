@@ -24,7 +24,7 @@ public static class MovieMapper
         return new MovieDto(movie.Id, movie.Title, movie.Synopsys, movie.ReleaseDate.Year, movie.Genre.ToString(), actorsDto, directorsDto);
     }
 
-    public static Movie ToMovieFromMovieDto(this CreateMovieDto createMovieDto)
+    public static Movie ToMovieFromCreateMovieDto(this CreateMovieDto createMovieDto)
     {
         var actors = new List<Actor>();
 
@@ -39,6 +39,7 @@ public static class MovieMapper
         foreach (var directorDto in createMovieDto.Directors)
         {
             var director = new Director() { Name = directorDto.Name, DateOfBirth = directorDto.DateOfBirth, Info = directorDto.Info };
+            directors.Add(director);
         }
         return new Movie
         {

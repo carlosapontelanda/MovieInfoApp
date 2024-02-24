@@ -31,4 +31,20 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
         }
         return Ok(movie.ToMovieDto());
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateMovie([FromBody] CreateMovieDto createMovieDto)
+    { 
+        
+        var movieModel  = createMovieDto.ToMovieFromCreateMovieDto();
+
+        if (await movieRepo.Exists(movieModel.Title))
+        { 
+            return BadRequest("The movie already exists");
+        }
+        var movie = await movieRepo.CreateAsync(movieModel);
+
+        return CreatedAtAction(nameof(GetMovieById), new {id = movie.Id}, movie.ToMovieDto());
+
+    }
 }
