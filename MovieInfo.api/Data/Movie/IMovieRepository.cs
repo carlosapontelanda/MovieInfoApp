@@ -1,4 +1,5 @@
 ﻿namespace MovieInfo.api.Data;
+using MovieInfo.api.Models;
 public interface IMovieRepository
 {
     Task<ICollection<Movie>> GetAllAsync(string title);

@@ -1,4 +1,4 @@
-﻿namespace MovieInfo.api; 
+﻿namespace MovieInfo.api.Models; 
 public sealed class Movie
 {
     public int Id { get; init; }

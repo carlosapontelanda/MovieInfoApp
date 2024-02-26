@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieInfo.api.Models;
 
-namespace MovieInfo.api;
+namespace MovieInfo.api.Data;
 
-public class ApplicationDBContext : DbContext
+public class ApplicationDBContext(DbContextOptions options) : DbContext(options)
 {
-    public ApplicationDBContext(DbContextOptions dbContextOptions) 
-    : base(dbContextOptions)
-    {
-         
-    }
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Actor> Actors { get; set; }
     public DbSet<Director> Directors { get; set; }

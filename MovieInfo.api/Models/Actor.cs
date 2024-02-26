@@ -1,4 +1,4 @@
-﻿namespace MovieInfo.api;
+﻿namespace MovieInfo.api.Models;
 
 public sealed class Actor
 {

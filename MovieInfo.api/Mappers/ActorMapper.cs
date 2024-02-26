@@ -1,6 +1,7 @@
 ﻿using MovieInfo.api.DTOs;
+using MovieInfo.api.Models;
 
-namespace MovieInfo.api;
+namespace MovieInfo.api.Mappers;
 public static class ActorMapper
 {
     public static ActorDto ToActorDto(this Actor actor)

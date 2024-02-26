@@ -1,4 +1,4 @@
-﻿namespace MovieInfo.api;
+﻿namespace MovieInfo.api.Models;
 
 public enum Genre
 {

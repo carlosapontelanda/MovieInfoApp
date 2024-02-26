@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieInfo.api.Models;
 
 namespace MovieInfo.api.Data;
 public class MovieRepository(ApplicationDBContext context) : IMovieRepository
@@ -19,7 +20,7 @@ public class MovieRepository(ApplicationDBContext context) : IMovieRepository
             .Include(d => d.Directors)
             .ToListAsync();
 
-        return (movies.Count() == 0) ? null : movies;
+        return (movies.Count == 0) ? null : movies;
     }
 
     public async Task<Movie> GetByIdAsync(int id)
@@ -35,10 +36,11 @@ public class MovieRepository(ApplicationDBContext context) : IMovieRepository
     public async Task<bool> Exists(string title)
     { 
         var movie = await context.Movies.FirstOrDefaultAsync(m => m.Title == title);
-        return (movie is null) ? false : true;
+        return movie is null;
     }
     public async Task<Movie> CreateAsync(Movie movie)
     {
+   
         context.Movies.Add(movie);
         await context.SaveChangesAsync();
         return movie;

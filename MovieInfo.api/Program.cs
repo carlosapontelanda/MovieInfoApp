@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MovieInfo.api;
 using MovieInfo.api.Data;
 
 var builder = WebApplication.CreateBuilder(args);

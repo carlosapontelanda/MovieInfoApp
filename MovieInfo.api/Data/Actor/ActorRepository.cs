@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieInfo.api.Models;
 
 namespace MovieInfo.api.Data;
 public class ActorRepository(ApplicationDBContext context) : IActorRepository
 {
     private readonly ApplicationDBContext context = context;
-    public async Task<List<Actor>> GetAllAsync(string name)
+    public async Task<ICollection<Actor>> GetAllAsync(string name)
     {
         var actorsQuery = context.Actors.AsQueryable();
 
@@ -15,7 +16,7 @@ public class ActorRepository(ApplicationDBContext context) : IActorRepository
 
         var actors = await actorsQuery.ToListAsync();
 
-        return (actors.Count() == 0) ? null : actors;
+        return (actors.Count == 0) ? null : actors;
     }
 
     public async Task<Actor> GetByIdAsync(int id)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieInfo.api.Data;
+using MovieInfo.api.Mappers;
 
 namespace MovieInfo.api.Controllers;
 
