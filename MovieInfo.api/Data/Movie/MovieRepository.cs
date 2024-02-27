@@ -36,12 +36,37 @@ public class MovieRepository(ApplicationDBContext context) : IMovieRepository
     public async Task<bool> Exists(string title)
     { 
         var movie = await context.Movies.FirstOrDefaultAsync(m => m.Title == title);
-        return movie is null;
+        return movie is not null;
     }
     public async Task<Movie> CreateAsync(Movie movie)
     {
-   
-        context.Movies.Add(movie);
+        var  actorsInMovie = movie.Actors;
+        movie.Actors = new List<Actor>();
+
+        foreach (var actor in actorsInMovie)
+        {
+            var actorEntity = await context.Actors.FirstOrDefaultAsync(a => a.Name == actor.Name);
+
+            if (actorEntity is not null)
+                movie.Actors.Add(actorEntity);
+            else
+                movie.Actors.Add(actor);
+        }
+
+        var directorsInMovie = movie.Directors;
+        movie.Directors = new List<Director>();
+
+        foreach (var director in directorsInMovie)
+        {
+            var directorEntity = await context.Directors.FirstOrDefaultAsync(d => d.Name == director.Name);
+
+            if (directorEntity is not null)
+                movie.Directors.Add(directorEntity);
+            else
+                movie.Directors.Add(director);
+        }
+
+        await context.Movies.AddAsync(movie);
         await context.SaveChangesAsync();
         return movie;
     }

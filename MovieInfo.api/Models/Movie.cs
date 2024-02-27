@@ -6,7 +6,7 @@ public sealed class Movie
     public string Synopsys { get; init; }
     public DateOnly ReleaseDate {get; init; }
     public Genre Genre { get; init; }
-    public ICollection<Actor> Actors { get; init; }
-    public ICollection<Director> Directors { get; init; }
+    public ICollection<Actor> Actors { get; set; }
+    public ICollection<Director> Directors { get; set; }
 }
 
