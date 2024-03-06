@@ -2,6 +2,7 @@
 using MovieInfo.api.Models;
 
 namespace MovieInfo.api.Data;
+
 public class MovieRepository(ApplicationDBContext context) : IMovieRepository
 {
     private readonly ApplicationDBContext context = context;
@@ -33,13 +34,14 @@ public class MovieRepository(ApplicationDBContext context) : IMovieRepository
         return (movie is null) ? null : movie;
     }
 
-    public async Task<bool> Exists(string title)
-    { 
-        var movie = await context.Movies.FirstOrDefaultAsync(m => m.Title == title);
-        return movie is not null;
-    }
     public async Task<Movie> CreateAsync(Movie movie)
     {
+		var existingMovie = await context.Movies
+			.FirstOrDefaultAsync(m => m.Title == movie.Title && m.ReleaseDate == m.ReleaseDate);
+		
+		if (existingMovie is not null)
+			return null;
+		
         var  actorsInMovie = movie.Actors;
         movie.Actors = new List<Actor>();
 
@@ -70,4 +72,117 @@ public class MovieRepository(ApplicationDBContext context) : IMovieRepository
         await context.SaveChangesAsync();
         return movie;
     }
+	
+	public async Task<Movie> UpdateAsync(Movie movie)
+	{
+		var movieToUpdate = await context.Movies.FirstOrDefaultAsync(m => m.Id == movie.Id);
+		
+		if (movieToUpdate is null)
+			return null;
+		
+		movieToUpdate.Title = movie.Title;
+		movieToUpdate.Synopsys = movie.Synopsys;
+		movieToUpdate.ReleaseDate = movie.ReleaseDate;
+		movieToUpdate.Genre = movie.Genre;
+		
+		await context.SaveChangesAsync();
+		return movieToUpdate;
+	
+	}
+		
+	public async Task<Movie> DeleteAsync(int id)
+	{
+		var existingMovie = await context.Movies
+			.FirstOrDefaultAsync(m => m.Id == id);
+		
+		if (existingMovie is null)
+			return null;
+		
+		context.Movies.Remove(existingMovie);
+		await context.SaveChangesAsync();
+		return existingMovie;
+	}
+	
+	public async Task<Movie> DeleteActorFromMovieAsync(int movieId, int actorId)
+	{
+		var existingMovie = await context.Movies
+			.Include(a => a.Actors)
+			.FirstOrDefaultAsync(m => m.Id == movieId);
+		
+		if (existingMovie is null)
+			return null;
+		
+		var actorToDelete = existingMovie.Actors.FirstOrDefault(a => a.Id == actorId);
+		
+		if (actorToDelete is null)
+			return null;
+		
+		existingMovie.Actors.Remove(actorToDelete);
+		await context.SaveChangesAsync();
+		return existingMovie;
+	}
+	
+	public async Task<Movie> DeleteDirectorFromMovieAsync(int movieId, int directorId)
+	{
+		var existingMovie = await context.Movies
+			.Include(d => d.Directors)
+			.FirstOrDefaultAsync(m => m.Id == movieId);
+		
+		if (existingMovie is null)
+			return null;
+		
+		var directorToDelete = existingMovie.Directors.FirstOrDefault(d => d.Id == directorId);
+		
+		if (directorToDelete is null)
+			return null;
+		
+		existingMovie.Directors.Remove(directorToDelete);
+		await context.SaveChangesAsync();
+		return existingMovie;
+	}
+	
+	public async Task<Movie> AsignActorToMovieAsync(int movieId, int actorId)
+	{
+		var existingMovie = await context.Movies
+			.Include(a => a.Actors)
+			.Include(d => d.Directors)
+			.FirstOrDefaultAsync(m => m.Id == movieId);
+			
+		if (existingMovie is null)
+			return null;
+		
+		var actorToAsign = context.Actors.FirstOrDefault(a => a.Id == actorId);
+		
+		if (actorToAsign is null)
+			return null;
+		
+		if (!existingMovie.Actors.Any(a => a.Id == actorToAsign.Id))
+			existingMovie.Actors.Add(actorToAsign);
+		
+		await context.SaveChangesAsync();
+		return existingMovie;
+    }
+	
+	public async Task<Movie> AsignDirectorToMovieAsync(int movieId, int directorId)
+	{
+		var existingMovie = await context.Movies
+			.Include(a => a.Actors)
+			.Include(d => d.Directors)
+			.FirstOrDefaultAsync(m => m.Id == movieId);
+			
+		if (existingMovie is null)
+			return null;
+		
+		var directorToAsign = context.Directors.FirstOrDefault(d => d.Id == directorId);
+
+		if (directorToAsign is null)
+			return null;
+		
+		if (!existingMovie.Directors.Any(d => d.Id == directorToAsign.Id))
+			existingMovie.Directors.Add(directorToAsign);
+
+		await context.SaveChangesAsync();
+		return existingMovie;
+    }
 }
+

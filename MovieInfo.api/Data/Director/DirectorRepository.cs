@@ -2,6 +2,7 @@
 using MovieInfo.api.Models;
 
 namespace MovieInfo.api.Data;
+
 public class DirectorRepository(ApplicationDBContext context) : IDirectorRepository
 {
     private readonly ApplicationDBContext context = context;
@@ -22,9 +23,52 @@ public class DirectorRepository(ApplicationDBContext context) : IDirectorReposit
 
     public async Task<Director> GetByIdAsync(int id)
     { 
-        var directors = await context.Directors.FirstOrDefaultAsync(d => d.Id == id );
+        var director = await context.Directors.FirstOrDefaultAsync(d => d.Id == id );
 
-        return (directors is null) ? null : directors;
+        return (director is null) ? null : director;
     }
+	
+	public async Task<Director> CreateAsync(Director director)
+    {
+		var existingDirector = await context.Directors
+            .FirstOrDefaultAsync(d => d.Name == director.Name);
+			
+		if (existingDirector is not null)
+            return null;
+			
+        await context.Directors.AddAsync(director);
+        await context.SaveChangesAsync();
+        return director;
+    }
+
+    public async Task<Director> UpdateAsync(Director director)
+    {
+        var existingDirector = await context.Directors
+            .FirstOrDefaultAsync(d => d.Name == director.Name);
+
+        if (existingDirector is null)
+            return null;
+
+        existingDirector.Name = director.Name;
+        existingDirector.DateOfBirth = director.DateOfBirth;
+        existingDirector.Info = director.Info;
+
+        await context.SaveChangesAsync();
+        return existingDirector;
+    }
+	
+	public async Task<Director> DeleteAsync(int id)
+	{
+		var existingDirector = await context.Directors
+			.FirstOrDefaultAsync(d => d.Id == id);
+		
+		if (existingDirector is null)
+			return null;
+		
+		context.Directors.Remove(existingDirector);
+		await context.SaveChangesAsync();
+		
+		return existingDirector;
+	}
 }
 
