@@ -2,6 +2,7 @@
 using MovieInfo.api.Data;
 using MovieInfo.api.Mappers;
 using MovieInfo.api.DTOs;
+using MovieInfo.api.Controllers.ActionFilters;
 
 namespace MovieInfo.api.Controllers;
 
@@ -17,8 +18,7 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
     {
         var movies = await movieRepo.GetAllAsync(title);
 
-        return (movies is null) ? NotFound()
-            : Ok(movies.Select(m => m.ToMovieDto()));
+        return (movies is null) ? NotFound() : Ok(movies.Select(m => m.ToMovieDto()));
     }
 
     [HttpGet]
@@ -26,14 +26,15 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
     public async Task<IActionResult> GetMovieById(int id)
     {
         var movie = await movieRepo.GetByIdAsync(id);
+		
         if (movie is null)
-        {
             return NotFound();
-        }
+		
         return Ok(movie.ToMovieDto());
     }
 
     [HttpPost]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
 	[Route("CreateMovie")]
     public async Task<IActionResult> CreateMovie([FromBody] CreateMovieDto createMovieDto)
     { 
@@ -48,6 +49,7 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
     }
 	
 	[HttpPut]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
 	[Route("UpdateMovie")]
     public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto updateMovieDto)
     { 
@@ -63,31 +65,31 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
 	
 	[HttpDelete]
 	[Route("DeleteMovie/{id:int}")]
-    public async Task<IActionResult> Delete([FromQuery] int id)
+    public async Task<IActionResult> Delete(int id)
     { 
 		var movieToDelte = await movieRepo.DeleteAsync(id);
 		
 		if (movieToDelte is null)
-			return NotFound("This movie was not found");
+			return NotFound();
 		
 		return NoContent();
     }
 	
 	[HttpDelete]
 	[Route("DeleteActorFromMovie")]
-    public async Task<IActionResult> DeleteActorFromMovie([FromQuery] int movieId, int actorId)
+    public async Task<IActionResult> DeleteActorFromMovie(int movieId, int actorId)
     { 
 		var actorToDelte = await movieRepo.DeleteActorFromMovieAsync(movieId, actorId);
 		
 		if (actorToDelte is null)
-			return NotFound("Actor or movie not found");
+			return NotFound();
 		
 		return NoContent();
     }
 	
 	[HttpDelete]
 	[Route("DeleteDirectorFromMovie")]
-    public async Task<IActionResult> DeleteDirectorFromMovie([FromQuery] int movieId, int directorId)
+    public async Task<IActionResult> DeleteDirectorFromMovie(int movieId, int directorId)
     { 
 		var directorToDelete = await movieRepo.DeleteDirectorFromMovieAsync(movieId, directorId);
 		
@@ -99,7 +101,7 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
 	
 	[HttpPut]
 	[Route("AsignActorToMovie")]
-    public async Task<IActionResult> AsignActorToMovie([FromQuery] int movieId, int actorId)
+    public async Task<IActionResult> AsignActorToMovie(int movieId, int actorId)
     { 	
 		var asignedActor = await movieRepo.AsignActorToMovieAsync(movieId, actorId);
 	
@@ -111,7 +113,7 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
 	
 	[HttpPut]
 	[Route("AsignDirectorToMovie")]
-    public async Task<IActionResult> AsignDirectorToMovie([FromQuery] int movieId, int directorId)
+    public async Task<IActionResult> AsignDirectorToMovie(int movieId, int directorId)
     { 	
 		var asignedDirector = await movieRepo.AsignDirectorToMovieAsync(movieId, directorId);
 	
@@ -121,4 +123,3 @@ public class MoviesController(IMovieRepository movieRepo) : ControllerBase
         return Ok(asignedDirector.ToMovieDto());
     }
 }
-

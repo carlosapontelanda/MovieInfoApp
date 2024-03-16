@@ -2,6 +2,7 @@
 using MovieInfo.api.Data;
 using MovieInfo.api.Mappers;
 using MovieInfo.api.DTOs;
+using MovieInfo.api.Controllers.ActionFilters;
 
 namespace MovieInfo.api.Controllers;
 
@@ -16,8 +17,7 @@ public class DirectorsController(IDirectorRepository directorRepo) : ControllerB
     {
         var directors = await directorRepo.GetAllAsync(name);
 
-        return (directors is null) ? NotFound()
-            : Ok(directors.Select(m => m.ToDirectorDto()));
+        return (directors is null) ? NotFound() : Ok(directors.Select(m => m.ToDirectorDto()));
     }
 
     [HttpGet]
@@ -25,16 +25,16 @@ public class DirectorsController(IDirectorRepository directorRepo) : ControllerB
     public async Task<IActionResult> GetById(int id)
     {
         var director = await directorRepo.GetByIdAsync(id);
+		
         if (director is null)
-        {
             return NotFound();
-        }
+        
         return Ok(director.ToDirectorDto());
     }
 	[HttpPost]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Create([FromBody] CreateDirectorDto createDirectorDto)
-    { 
-        
+    {     
         var directorModel  = createDirectorDto.ToDirectorFromCreateDirectorDto();
 		
 		var newDirector = await directorRepo.CreateAsync(directorModel);
@@ -46,6 +46,7 @@ public class DirectorsController(IDirectorRepository directorRepo) : ControllerB
 	}
 		
 	[HttpPut]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Update([FromBody] UpdateDirectorDto updateDirectorDto)
     { 
 		var directorModel = updateDirectorDto.ToDirectorFromUpdateDirectorDto();
@@ -53,9 +54,7 @@ public class DirectorsController(IDirectorRepository directorRepo) : ControllerB
         var updatedDirector = await directorRepo.UpdateAsync(directorModel);
 
         if (updatedDirector is null)
-		{
-			return NotFound("This director was not found");
-		}
+			return NotFound();
 		
 		return Ok(updatedDirector.ToDirectorDto());
     }
@@ -67,7 +66,7 @@ public class DirectorsController(IDirectorRepository directorRepo) : ControllerB
 		var directorToDelte = await directorRepo.DeleteAsync(id);
 		
 		if (directorToDelte is null)
-			return NotFound("This director was not found");
+			return NotFound();
 		
 		return NoContent();
     }

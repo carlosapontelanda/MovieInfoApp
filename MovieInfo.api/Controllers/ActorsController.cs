@@ -2,6 +2,7 @@
 using MovieInfo.api.Data;
 using MovieInfo.api.Mappers;
 using MovieInfo.api.DTOs;
+using MovieInfo.api.Controllers.ActionFilters;
 
 namespace MovieInfo.api.Controllers;
 
@@ -16,8 +17,7 @@ public class ActorsController(IActorRepository actorRepo) : ControllerBase
     {
         var actorsModel = await actorRepo.GetAllAsync(name);
 
-        return (actorsModel is null) ? NotFound()
-            : Ok(actorsModel.Select(a => a.ToActorDto()));
+        return (actorsModel is null) ? NotFound() : Ok(actorsModel.Select(a => a.ToActorDto()));
     }
 
     [HttpGet]
@@ -25,14 +25,15 @@ public class ActorsController(IActorRepository actorRepo) : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var actorModel = await actorRepo.GetByIdAsync(id);
+		
         if (actorModel is null)
-        {
             return NotFound();
-        }
+  
         return Ok(actorModel.ToActorDto());
     }
 
     [HttpPost]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Create([FromBody] CreateActorDto createActorDto)
     { 
         
@@ -44,10 +45,10 @@ public class ActorsController(IActorRepository actorRepo) : ControllerBase
             return BadRequest("This actor already exists");
 
         return CreatedAtAction(nameof(GetById), new {id = newActor.Id}, newActor.ToActorDto());
-
     }
 	
 	[HttpPut]
+	[ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> Update([FromBody] UpdateActorDto updateActorDto)
     { 
 		var actorModel = updateActorDto.ToActorFromUpdateActorDto();
@@ -55,11 +56,11 @@ public class ActorsController(IActorRepository actorRepo) : ControllerBase
 		var updatedActor = await actorRepo.UpdateAsync(actorModel);
 		
 		if (updatedActor is null)
-			return NotFound("This actor was not found");
+			return NotFound();
 		
 		return Ok(updatedActor.ToActorDto());
     }
-	
+
 	[HttpDelete]
 	[Route("Delete/{id:int}")]
     public async Task<IActionResult> Delete(int id)
@@ -67,7 +68,7 @@ public class ActorsController(IActorRepository actorRepo) : ControllerBase
 		var actorToDelte = await actorRepo.DeleteAsync(id);
 		
 		if (actorToDelte is null)
-			return NotFound("This actor was not found");
+			return NotFound();
 		
 		return NoContent();
     }

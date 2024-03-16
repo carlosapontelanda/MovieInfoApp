@@ -1,5 +1,24 @@
-﻿namespace MovieInfo.api.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record UpdateActorDto(int Id, string Name, DateOnly DateOfBirth, string Info);
+namespace MovieInfo.api.DTOs;
+
+public record UpdateActorDto
+(
+	[Required]
+	int Id, 
+	
+	[Required]
+	[MinLength(2, ErrorMessage = "The actor's name must have at least 2 characters")]
+	[MaxLength(50, ErrorMessage = "The actor's name exceded the maximun amount of characters")]
+	string Name, 
+	
+	[Required]
+	DateOnly DateOfBirth, 
+	
+	[Required]
+	[MinLength(2, ErrorMessage = "The actor's info must have at least 2 characters")]
+	[MaxLength(1000, ErrorMessage = "Information about actor exceded the maximun amount of characters")]
+	string Info
+);
 
 
